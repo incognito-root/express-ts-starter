@@ -11,6 +11,7 @@ const pool = new Pool({
   max: DB_POOL_SIZE,
 });
 
+// @ts-expect-error -- @types/pg version mismatch between `pg` and `@prisma/adapter-pg` bundled types
 const adapter = new PrismaPg(pool);
 
 const prisma = new PrismaClient({

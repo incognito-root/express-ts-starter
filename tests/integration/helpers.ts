@@ -21,7 +21,7 @@ export function getApp(): Express {
 // The agent automatically persists the `_csrf` httpOnly cookie.
 // ---------------------------------------------------------------------------
 export async function getCsrfToken(
-  agent: supertest.SuperAgentTest
+  agent: ReturnType<typeof supertest.agent>
 ): Promise<string> {
   const res = await agent.get("/v1/auth/csrf-token").expect(200);
   return res.body.csrfToken as string;

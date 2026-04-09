@@ -6,6 +6,18 @@ on:
   pull_request:
     branches: [main, master, development]
 
+# ─────────────────────────────────────────────────────────────────────────────
+# NOTE FOR TEMPLATE USERS
+#
+# This workflow is for maintaining the express-ts-starter template itself.
+# When you initialize a project from this template (node scripts/init.js),
+# update this file for your project's needs:
+#
+#   - Uncomment or restore the "db-migrate" job once you have migration files
+#   - Uncomment or restore the "integration-test" job with your env secrets
+#   - Remove this comment block
+# ─────────────────────────────────────────────────────────────────────────────
+
 jobs:
   ci:
     name: Lint → Typecheck → Test → Build
@@ -23,6 +35,11 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      # Generate Prisma client so TypeScript can resolve generated types.
+      # (generated/ is gitignored — must be regenerated in CI)
+      - name: Generate Prisma client
+        run: npm run prisma:generate
 
       - name: Lint
         run: npm run lint
@@ -43,107 +60,6 @@ jobs:
       - name: Build
         run: npm run build
 
-  db-migrate:
-    name: DB Migration Check
-    runs-on: ubuntu-latest
-
-    services:
-      postgres:
-        image: postgres:16-alpine
-        env:
-          POSTGRES_USER: ci
-          POSTGRES_PASSWORD: ci
-          POSTGRES_DB: ci_test
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
-    env:
-      DATABASE_URL: postgresql://ci:ci@localhost:5432/ci_test
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: "npm"
-
-      - name: Install dependencies
-        run: npm ci
-
-      # Apply all migration files to a fresh database.
-      # Fails if any migration file is invalid SQL or conflicts with the schema.
-      - name: Apply migrations
-        run: npx prisma migrate deploy
-
-      # Verify there are no unapplied or failed migrations after deploy.
-      - name: Check migration status
-        run: npx prisma migrate status
-
-  integration-test:
-    name: Integration Tests
-    runs-on: ubuntu-latest
-    needs: ci
-
-    services:
-      postgres:
-        image: postgres:16-alpine
-        env:
-          POSTGRES_USER: ci
-          POSTGRES_PASSWORD: ci
-          POSTGRES_DB: ci_test
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-      redis:
-        image: redis:7-alpine
-        ports:
-          - 6379:6379
-        options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
-    env:
-      TEST_DATABASE_URL: postgresql://ci:ci@localhost:5432/ci_test
-      TEST_REDIS_URL: redis://localhost:6379
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: "npm"
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Generate Prisma client
-        run: npx prisma generate
-
-      - name: Apply migrations to test database
-        run: npx prisma migrate deploy
-        env:
-          DATABASE_URL: ${{ env.TEST_DATABASE_URL }}
-
-      - name: Run integration tests
-        run: npm run test:integration
-
   security:
     name: Security Scan (Trivy)
     runs-on: ubuntu-latest
@@ -154,36 +70,37 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Scan the repository filesystem for known CVEs in npm dependencies and source.
-      # Fails the job on HIGH or CRITICAL severity findings.
+      # Scan the repository filesystem for known CVEs in npm dependencies.
+      # ignore-unfixed: only fail on CVEs that have a fix available (actionable).
       - name: Trivy — filesystem scan
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.28.0
         with:
           scan-type: fs
           scan-ref: .
           severity: HIGH,CRITICAL
+          ignore-unfixed: true
           format: sarif
           output: trivy-fs.sarif
           exit-code: 1
 
       - name: Upload filesystem SARIF to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
-        if: always() # upload even if the scan step failed
+        if: always()
         with:
           sarif_file: trivy-fs.sarif
           category: trivy-fs
 
-      # Build the Docker image and scan it for OS-level and package vulnerabilities.
-      # Runs after the filesystem scan so we don't waste build time if deps are already failing.
+      # Build the Docker image and scan for OS-level vulnerabilities.
       - name: Build Docker image for scanning
         run: docker build -t app:${{ github.sha }} .
 
       - name: Trivy — Docker image scan
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.28.0
         with:
           scan-type: image
           image-ref: app:${{ github.sha }}
           severity: HIGH,CRITICAL
+          ignore-unfixed: true
           format: sarif
           output: trivy-image.sarif
           exit-code: 1

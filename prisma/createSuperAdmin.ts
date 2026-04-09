@@ -36,6 +36,7 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
 
+// @ts-expect-error -- @types/pg version mismatch between `pg` and `@prisma/adapter-pg` bundled types
 const adapter = new PrismaPg(pool);
 
 const prisma = new PrismaClient({ adapter });

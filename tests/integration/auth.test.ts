@@ -16,7 +16,7 @@ import {
 // Suite-wide setup — one Express app, one supertest agent per top-level
 // describe, services connected once.
 // ---------------------------------------------------------------------------
-let agent: supertest.SuperAgentTest;
+let agent: ReturnType<typeof supertest.agent>;
 
 beforeAll(async () => {
   await connectServices();
@@ -40,7 +40,7 @@ afterAll(async () => {
 // Helper — login flow (CSRF + POST /login) returns the supertest response.
 // ---------------------------------------------------------------------------
 async function loginAs(
-  ag: supertest.SuperAgentTest,
+  ag: ReturnType<typeof supertest.agent>,
   email: string,
   password: string,
   rememberMe = false
@@ -67,7 +67,7 @@ describe("POST /v1/auth/login", () => {
     expect(res.body.message).toBe("Logged in successfully.");
 
     // Verify httpOnly auth cookies were set
-    const cookies = res.headers["set-cookie"] as string[];
+    const cookies = res.headers["set-cookie"] as unknown as string[];
     expect(cookies.some((c: string) => c.startsWith("accessToken="))).toBe(
       true
     );
@@ -146,7 +146,7 @@ describe("POST /v1/auth/logout", () => {
     expect(res.body.message).toBe("Logged out successfully");
 
     // Cookies should be cleared (set to empty with past expiry)
-    const cookies = res.headers["set-cookie"] as string[];
+    const cookies = res.headers["set-cookie"] as unknown as string[];
     const accessClear = cookies?.find((c: string) =>
       c.startsWith("accessToken=")
     );

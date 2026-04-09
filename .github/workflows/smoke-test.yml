@@ -1,8 +1,10 @@
 name: Smoke Test
 
-# Manual trigger or weekly schedule.
-# Does NOT run on every push — use for on-demand validation
-# of a deployed environment or a fresh local build.
+# Manual trigger only on the template maintenance repo.
+# NOTE FOR TEMPLATE USERS: restore the schedule once you have migration files
+# and a working initialized project, e.g.:
+#   schedule:
+#     - cron: "17 2 * * 0"   # Every Sunday at 02:17 UTC
 on:
   workflow_dispatch:
     inputs:
@@ -10,9 +12,6 @@ on:
         description: "Server base URL to test against"
         required: false
         default: "http://localhost:3001"
-  schedule:
-    # Every Sunday at 02:17 UTC
-    - cron: "17 2 * * 0"
 
 jobs:
   smoke-test:

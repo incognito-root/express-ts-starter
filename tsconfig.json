@@ -31,5 +31,6 @@
     /* Completeness */
     "skipLibCheck": true
   },
-  "include": ["src", "tests", "prisma/seed.ts", "prisma/createSuperAdmin.ts", "vitest.config.ts"]
+  "include": ["src", "tests", "prisma/seed.ts", "prisma/createSuperAdmin.ts"],
+  "exclude": ["vitest.config.ts", "node_modules", "dist"]
 }

@@ -133,7 +133,7 @@ router.post(
  *         description: CSRF token retrieved
  */
 router.get("/csrf-token", csrfProtection, setCsrfToken, (req, res) => {
-  res.json({ csrfToken: req.csrfToken() });
+  res.json({ csrfToken: req.csrfToken!() });
 });
 
 export default router;

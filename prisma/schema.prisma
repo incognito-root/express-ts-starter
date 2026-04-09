@@ -1,0 +1,98 @@
+generator client {
+  provider        = "prisma-client"
+  output          = "../generated/prisma"
+  moduleFormat    = "commonjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ============================================================
+// CORE MODELS
+// These 4 models are the template foundation.
+// Add your domain models below.
+// ============================================================
+
+model User {
+  id          String    @id @default(cuid())
+  email       String    @unique
+  password    String
+  name        String
+  role        Role      @default(MEMBER)
+  isVerified  Boolean   @default(false)
+  isActive    Boolean   @default(true)
+  deletedAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  tokens      Token[]
+  memberships OrganizationMember[]
+
+  @@index([deletedAt])
+}
+
+model Token {
+  id        String    @id @default(cuid())
+  token     String    @unique
+  type      TokenType
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+}
+
+model Organisation {
+  id        String    @id @default(cuid())
+  name      String
+  slug      String    @unique
+  isActive  Boolean   @default(true)
+  deletedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  members OrganizationMember[]
+
+  @@index([deletedAt])
+}
+
+model OrganizationMember {
+  id             String   @id @default(cuid())
+  userId         String
+  organisationId String
+  role           Role
+  createdAt      DateTime @default(now())
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organisation Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, organisationId])
+  @@index([userId])
+  @@index([organisationId])
+}
+
+// ============================================================
+// ENUMS
+// ============================================================
+
+enum Role {
+  SUPER_ADMIN
+  OWNER
+  ADMIN
+  MANAGER
+  MEMBER
+}
+
+enum TokenType {
+  REFRESH
+  VERIFY_EMAIL
+}
+
+enum AuthContext {
+  PLATFORM
+  ORGANIZATION
+}

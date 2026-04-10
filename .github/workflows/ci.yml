@@ -91,10 +91,13 @@ jobs:
           category: trivy-fs
 
       # Build the Docker image and scan for OS-level vulnerabilities.
+      # if: always() ensures this runs even if the fs scan found CVEs above.
       - name: Build Docker image for scanning
+        if: always()
         run: docker build -t app:${{ github.sha }} .
 
       - name: Trivy — Docker image scan
+        if: always()
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: image
@@ -107,7 +110,7 @@ jobs:
 
       - name: Upload image scan SARIF to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
-        if: always()
+        if: always() && hashFiles('trivy-image.sarif') != ''
         with:
           sarif_file: trivy-image.sarif
           category: trivy-image

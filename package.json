@@ -120,6 +120,9 @@
       "prettier --write"
     ]
   },
+  "overrides": {
+    "minimatch": ">=9.0.7"
+  },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
   }

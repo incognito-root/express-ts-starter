@@ -33,7 +33,7 @@
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
     "docker:logs": "docker-compose logs -f app",
-    "prepare": "husky install"
+    "prepare": "husky install || true"
   },
   "keywords": [],
   "author": "",

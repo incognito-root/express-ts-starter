@@ -67,7 +67,7 @@
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.0.2",
     "nanoid": "^5.1.6",
-    "nodemailer": "^7.0.10",
+    "nodemailer": "^8.0.5",
     "opossum": "^8.1.0",
     "pg": "^8.16.3",
     "prisma": "^7.0.0",

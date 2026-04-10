@@ -156,6 +156,66 @@ async function main() {
     }
   }
 
+  // Enable branch protection: rewrite .husky/pre-push with master/main guard
+  const prePushPath = path.join(ROOT, ".husky", "pre-push");
+  const prePushContent = [
+    "#!/usr/bin/env sh",
+    '. "$(dirname -- "$0")/_/husky.sh"',
+    "",
+    "# Block direct pushes to main/master — use feature branches + PRs instead",
+    "current_branch=$(git rev-parse --abbrev-ref HEAD)",
+    "",
+    'if [ "$current_branch" = "master" ] || [ "$current_branch" = "main" ]; then',
+    '  echo ""',
+    '  echo "❌ ERROR: Cannot push directly to \'$current_branch\' branch"',
+    '  echo ""',
+    '  echo "Please use a feature branch and create a pull request instead:"',
+    '  echo "  1. Create a new branch: git checkout -b feature/your-feature"',
+    '  echo "  2. Make your changes"',
+    '  echo "  3. Push: git push origin feature/your-feature"',
+    '  echo "  4. Create a pull request on GitHub/GitLab"',
+    '  echo ""',
+    "  exit 1",
+    "fi",
+    "",
+    "exit 0",
+  ].join("\n") + "\n";
+
+  const preCommitPath = path.join(ROOT, ".husky", "pre-commit");
+  const preCommitContent = [
+    "#!/usr/bin/env sh",
+    '. "$(dirname -- "$0")/_/husky.sh"',
+    "",
+    "# Block direct commits to main/master — use feature branches instead",
+    "current_branch=$(git rev-parse --abbrev-ref HEAD)",
+    "",
+    'if [ "$current_branch" = "master" ] || [ "$current_branch" = "main" ]; then',
+    '  echo ""',
+    '  echo "❌ ERROR: Cannot commit directly to \'$current_branch\' branch"',
+    '  echo ""',
+    '  echo "Please use a feature branch instead:"',
+    '  echo "  1. Create a new branch: git checkout -b feature/your-feature"',
+    '  echo "  2. Make your changes"',
+    '  echo "  3. Commit: git commit -m \'your message\'"',
+    '  echo "  4. Push and create a pull request"',
+    '  echo ""',
+    "  exit 1",
+    "fi",
+    "",
+    "# Run lint-staged (lint + format changed files)",
+    "npx lint-staged",
+  ].join("\n") + "\n";
+
+  try {
+    fs.writeFileSync(prePushPath, prePushContent, "utf8");
+    fs.chmodSync(prePushPath, 0o755);
+    fs.writeFileSync(preCommitPath, preCommitContent, "utf8");
+    fs.chmodSync(preCommitPath, 0o755);
+    console.log("  ✓ Branch protection enabled (pre-commit + pre-push hooks)");
+  } catch {
+    console.log("  ⚠️  Could not update Husky hooks (update .husky/ manually)");
+  }
+
   // Self-delete this script
   try {
     fs.unlinkSync(__filename);

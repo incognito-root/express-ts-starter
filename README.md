@@ -2,7 +2,7 @@
 
 A production-ready Express + TypeScript backend starter template. Clone it, run the init script, and start building your domain logic immediately.
 
-Built for SaaS backends — includes authentication, RBAC, multi-tenancy foundations, async email, real-time sockets, observability, and a full CI/CD pipeline. Everything you need to skip the boilerplate and ship faster.
+Built for SaaS backends - includes authentication, RBAC, multi-tenancy foundations, async email, real-time sockets, observability, and a full CI/CD pipeline. Everything you need to skip the boilerplate and ship faster.
 
 ---
 
@@ -31,7 +31,7 @@ Built for SaaS backends — includes authentication, RBAC, multi-tenancy foundat
 
 ### Authentication & Authorization
 - Cookie-based JWT with `accessToken` + `refreshToken` (httpOnly, secure, SameSite)
-- Silent token refresh — access tokens auto-renew using refresh tokens
+- Silent token refresh - access tokens auto-renew using refresh tokens
 - Refresh token rotation with atomic revocation (race-condition safe)
 - Access token blacklist via Redis JTI (instant logout)
 - Email verification flow with one-time tokens
@@ -41,7 +41,7 @@ Built for SaaS backends — includes authentication, RBAC, multi-tenancy foundat
 
 ### Security
 - Helmet with CSP, HSTS, and other security headers
-- Redis-backed rate limiting (per-IP, per-route tiers) — fails closed
+- Redis-backed rate limiting (per-IP, per-route tiers) - fails closed
 - XSS sanitization on all request bodies (DOMPurify)
 - Password byte-length enforcement (bcrypt 72-byte limit)
 - Input validation via express-validator with typed error responses
@@ -67,7 +67,7 @@ Built for SaaS backends — includes authentication, RBAC, multi-tenancy foundat
 
 ### API Design
 - URL path versioning (`/v1/`) with RFC 8594 deprecation headers
-- Version registry — deprecate versions with config-only changes
+- Version registry - deprecate versions with config-only changes
 - Swagger/OpenAPI docs (development mode)
 - Standardized error responses with error IDs
 
@@ -80,7 +80,7 @@ Built for SaaS backends — includes authentication, RBAC, multi-tenancy foundat
 - Socket.IO with Redis adapter for horizontal scaling
 
 ### Developer Experience
-- Interactive `init.js` script — replace placeholders, create `.env`, self-deletes
+- Interactive `init.js` script - replace placeholders, create `.env`, self-deletes
 - Husky + lint-staged + commitlint (conventional commits)
 - Path aliases (`@controllers/*`, `@services/*`, etc.)
 - ESLint strict mode with `no-unsafe-*` as warnings
@@ -101,7 +101,7 @@ Built for SaaS backends — includes authentication, RBAC, multi-tenancy foundat
 ### Setup
 
 ```bash
-# 1. Clone the template (don't fork — start fresh)
+# 1. Clone the template (don't fork - start fresh)
 git clone https://github.com/YOUR_USERNAME/express-ts-starter.git my-project
 cd my-project
 rm -rf .git && git init
@@ -322,41 +322,41 @@ All variables are validated at startup with Zod. The server won't start with inv
 | `PORT` | No | `3001` | Server port |
 | `APP_VERSION` | No | `1.0.0` | App version (exposed in health check) |
 | **Frontend** |  |  |  |
-| `FRONTEND_URL` | Yes | — | Frontend URL for CORS + email links |
-| `CORS_ORIGINS` | Yes | — | Comma-separated allowed origins |
+| `FRONTEND_URL` | Yes | - | Frontend URL for CORS + email links |
+| `CORS_ORIGINS` | Yes | - | Comma-separated allowed origins |
 | **Database** |  |  |  |
-| `DATABASE_URL` | Yes | — | PostgreSQL connection string |
+| `DATABASE_URL` | Yes | - | PostgreSQL connection string |
 | `DB_POOL_SIZE` | No | `10` | Connection pool size (1–100) |
 | **JWT** |  |  |  |
-| `JWT_SECRET` | Yes | — | Signing secret (min 32 chars) |
+| `JWT_SECRET` | Yes | - | Signing secret (min 32 chars) |
 | `JWT_ACCESS_EXPIRY` | No | `1h` | Access token TTL (ms-compatible: `15m`, `1h`, `2d`) |
 | `JWT_REFRESH_EXPIRY` | No | `7d` | Refresh token TTL |
 | **Redis** |  |  |  |
-| `REDIS_URL` | Yes | — | Redis connection URL |
-| `REDIS_PASSWORD` | No | — | Redis password |
+| `REDIS_URL` | Yes | - | Redis connection URL |
+| `REDIS_PASSWORD` | No | - | Redis password |
 | **Email (SMTP)** |  |  |  |
-| `EMAIL_HOST` | Yes | — | SMTP host |
-| `EMAIL_PORT` | Yes | — | SMTP port |
+| `EMAIL_HOST` | Yes | - | SMTP host |
+| `EMAIL_PORT` | Yes | - | SMTP port |
 | `EMAIL_SECURE` | No | `false` | Use TLS |
-| `EMAIL_USER` | Yes | — | SMTP username |
-| `EMAIL_PASSWORD` | Yes | — | SMTP password |
-| `EMAIL_FROM` | Yes | — | Sender email address |
+| `EMAIL_USER` | Yes | - | SMTP username |
+| `EMAIL_PASSWORD` | Yes | - | SMTP password |
+| `EMAIL_FROM` | Yes | - | Sender email address |
 | **Rate Limiting** |  |  |  |
 | `RATE_LIMIT_WINDOW_MS` | No | `900000` | Window duration (ms) |
 | `RATE_LIMIT_MAX_REQUESTS` | No | `100` | Max requests per window |
 | **Logging** |  |  |  |
 | `LOG_LEVEL` | No | `info` | Winston log level |
 | **Security** |  |  |  |
-| `SESSION_SECRET` | Yes | — | Session secret (min 32 chars) |
-| `CSRF_SECRET` | Yes | — | CSRF secret (min 32 chars) |
-| `COOKIE_DOMAIN` | No | — | Cookie domain (for cross-subdomain) |
-| `HEALTH_API_KEY` | No | — | Bearer token for `/health` detail + `/metrics` (min 16 chars) |
+| `SESSION_SECRET` | Yes | - | Session secret (min 32 chars) |
+| `CSRF_SECRET` | Yes | - | CSRF secret (min 32 chars) |
+| `COOKIE_DOMAIN` | No | - | Cookie domain (for cross-subdomain) |
+| `HEALTH_API_KEY` | No | - | Bearer token for `/health` detail + `/metrics` (min 16 chars) |
 | **Observability** |  |  |  |
-| `OTEL_EXPORTER_OTLP_ENDPOINT` | No | — | OTLP endpoint (enables tracing when set) |
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | No | - | OTLP endpoint (enables tracing when set) |
 | **Cloudinary (optional)** |  |  |  |
-| `CLOUDINARY_CLOUD_NAME` | No | — | Cloudinary cloud name |
-| `CLOUDINARY_API_KEY` | No | — | Cloudinary API key |
-| `CLOUDINARY_API_SECRET` | No | — | Cloudinary API secret |
+| `CLOUDINARY_CLOUD_NAME` | No | - | Cloudinary cloud name |
+| `CLOUDINARY_API_KEY` | No | - | Cloudinary API key |
+| `CLOUDINARY_API_SECRET` | No | - | Cloudinary API secret |
 
 ---
 
@@ -421,7 +421,7 @@ All variables are validated at startup with Zod. The server won't start with inv
 
 ### Unit Tests
 
-Unit tests run with mocked Prisma and Redis — no external services needed.
+Unit tests run with mocked Prisma and Redis - no external services needed.
 
 ```bash
 npm test
@@ -464,8 +464,8 @@ npm run k6:smoke
 
 The included `Dockerfile` uses a multi-stage build:
 
-1. **Builder stage** — installs all deps, generates Prisma client, compiles TypeScript
-2. **Production stage** — installs only production deps, copies compiled output, runs as non-root user with `dumb-init`
+1. **Builder stage** - installs all deps, generates Prisma client, compiles TypeScript
+2. **Production stage** - installs only production deps, copies compiled output, runs as non-root user with `dumb-init`
 
 ```bash
 # Build
@@ -537,7 +537,7 @@ npx prisma migrate dev --name add-posts
 
 Two GitHub Actions workflows are included:
 
-### `ci.yml` — Main Pipeline
+### `ci.yml` - Main Pipeline
 Runs on every push and PR:
 - Lint (ESLint) + Format check (Prettier)
 - TypeScript type check
@@ -546,7 +546,7 @@ Runs on every push and PR:
 - Docker build
 - Trivy security scanning (filesystem + container image)
 
-### `smoke-test.yml` — Load Test
+### `smoke-test.yml` - Load Test
 Runs weekly + on-demand:
 - Starts the full stack (app + Postgres + Redis)
 - Seeds the database

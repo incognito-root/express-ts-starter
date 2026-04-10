@@ -107,6 +107,7 @@ jobs:
           scanners: vuln
           severity: HIGH,CRITICAL
           ignore-unfixed: true
+          trivyignores: .trivyignore
           format: sarif
           output: trivy-image.sarif
           limit-severities-for-sarif: true

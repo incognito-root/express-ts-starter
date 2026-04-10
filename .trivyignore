@@ -1,0 +1,4 @@
+# picomatch 4.0.3 ReDoS — bundled inside npm's own node_modules in the
+# node:22-alpine base image.  Not used by application code; will be
+# resolved when a patched node:22-alpine image is published.
+CVE-2026-33671

@@ -24,8 +24,8 @@ FROM node:22-alpine
 
 WORKDIR /app
 
-# Install dumb-init for proper signal handling
-RUN apk add --no-cache dumb-init
+# Patch Alpine OS vulnerabilities and install dumb-init
+RUN apk update && apk upgrade --no-cache && apk add --no-cache dumb-init
 
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001

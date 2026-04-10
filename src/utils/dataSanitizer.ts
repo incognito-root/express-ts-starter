@@ -27,7 +27,11 @@ export const sanitizeData = (
         typeof sanitized[key] === "object" &&
         sanitized[key] !== null
       ) {
-        sanitized[key] = sanitizeData(sanitized[key], sensitiveFields, _depth + 1);
+        sanitized[key] = sanitizeData(
+          sanitized[key],
+          sensitiveFields,
+          _depth + 1
+        );
       }
     }
 

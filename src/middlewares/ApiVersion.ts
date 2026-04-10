@@ -32,7 +32,10 @@ export function apiVersionMiddleware(version: string) {
 
     res.set("X-API-Version", version);
 
-    if (config && (config.status === "deprecated" || config.status === "sunset")) {
+    if (
+      config &&
+      (config.status === "deprecated" || config.status === "sunset")
+    ) {
       if (config.deprecatedAt) {
         res.set("Deprecation", config.deprecatedAt);
       }

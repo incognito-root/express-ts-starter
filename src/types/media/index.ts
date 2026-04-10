@@ -11,12 +11,7 @@ export type VideoMimeType = "video/mp4";
 
 export type MediaMimeType = ImageMimeType | VideoMimeType;
 
-export type ImageCategory =
-  | "logo"
-  | "banner"
-  | "photo"
-  | "image"
-  | "general";
+export type ImageCategory = "logo" | "banner" | "photo" | "image" | "general";
 
 export interface ImageTransformOptions {
   width?: number;
@@ -100,7 +95,10 @@ export interface ImagePreset {
 export interface IStorageProvider {
   readonly name: StorageProvider;
   isConfigured(): boolean;
-  validateFile(file: UploadedFile, options: UploadOptions): FileValidationResult;
+  validateFile(
+    file: UploadedFile,
+    options: UploadOptions
+  ): FileValidationResult;
   upload(file: Buffer | string, options: UploadOptions): Promise<UploadResult>;
   delete(publicId: string, options?: DeleteOptions): Promise<DeleteResult>;
   getTransformedUrl(options: TransformUrlOptions): string;

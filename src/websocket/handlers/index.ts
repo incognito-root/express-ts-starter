@@ -20,9 +20,6 @@ export { handleConnection } from "./connectionHandler";
  *
  * See EXTENDING.md for a complete guide.
  */
-export function registerHandlers(
-  _io: LiveServer,
-  _socket: LiveSocket
-): void {
+export function registerHandlers(_io: LiveServer, _socket: LiveSocket): void {
   // Add your handler registrations here
 }

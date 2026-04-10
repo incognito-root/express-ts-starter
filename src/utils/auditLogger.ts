@@ -5,10 +5,7 @@ import { getRequestId } from "./requestContext";
 
 const auditLog = createLogger({
   level: "info",
-  format: format.combine(
-    format.timestamp(),
-    format.json()
-  ),
+  format: format.combine(format.timestamp(), format.json()),
   transports: [
     new DailyRotateFile({
       filename: "logs/audit-%DATE%.log",
@@ -19,10 +16,7 @@ const auditLog = createLogger({
   ],
 });
 
-export const audit = (
-  event: string,
-  data: Record<string, unknown>
-): void => {
+export const audit = (event: string, data: Record<string, unknown>): void => {
   auditLog.info(event, {
     ...data,
     requestId: getRequestId(),

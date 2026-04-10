@@ -38,10 +38,7 @@ if (otlpEndpoint) {
     traceExporter: new OTLPTraceExporter({
       url: `${otlpEndpoint}/v1/traces`,
     }),
-    instrumentations: [
-      new HttpInstrumentation(),
-      new ExpressInstrumentation(),
-    ],
+    instrumentations: [new HttpInstrumentation(), new ExpressInstrumentation()],
   });
 
   sdk.start();

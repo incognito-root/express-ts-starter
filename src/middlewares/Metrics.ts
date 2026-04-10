@@ -1,9 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
-import {
-  httpRequestDurationMs,
-  httpRequestsTotal,
-} from "../utils/metrics";
+import { httpRequestDurationMs, httpRequestsTotal } from "../utils/metrics";
 
 /**
  * Records HTTP request count and duration per method / route / status.

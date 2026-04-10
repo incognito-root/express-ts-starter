@@ -9,7 +9,7 @@ export interface EmailOptions {
       filename: string;
       content: string | Buffer;
       encoding: string;
-    }
+    },
   ];
 }
 

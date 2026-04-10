@@ -7,10 +7,11 @@ import { z } from "zod";
  * not an arbitrary string. Invalid values would cause jwt.sign to silently produce tokens
  * with no expiry or throw at runtime.
  */
-const msDuration = z.string().refine(
-  (val) => typeof ms(val as Parameters<typeof ms>[0]) === "number",
-  { message: "Must be a valid duration string (e.g. '1h', '7d', '15m')" }
-);
+const msDuration = z
+  .string()
+  .refine((val) => typeof ms(val as Parameters<typeof ms>[0]) === "number", {
+    message: "Must be a valid duration string (e.g. '1h', '7d', '15m')",
+  });
 
 const envSchema = z.object({
   // Application
@@ -24,7 +25,9 @@ const envSchema = z.object({
   FRONTEND_URL: z.string().url(),
 
   // CORS
-  CORS_ORIGINS: z.string().transform((val) => val.split(",").map((o) => o.trim())),
+  CORS_ORIGINS: z
+    .string()
+    .transform((val) => val.split(",").map((o) => o.trim())),
 
   // Database
   DATABASE_URL: z.string().url(),

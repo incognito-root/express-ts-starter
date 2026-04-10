@@ -129,10 +129,13 @@ async function _handleIdempotency(
     next();
   } catch (err) {
     // Redis unavailable — fail open so the API remains functional.
-    logger.warn("Idempotency middleware unavailable, proceeding without cache", {
-      key,
-      err,
-    });
+    logger.warn(
+      "Idempotency middleware unavailable, proceeding without cache",
+      {
+        key,
+        err,
+      }
+    );
     next();
   }
 }

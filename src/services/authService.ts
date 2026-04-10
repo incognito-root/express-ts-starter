@@ -48,12 +48,28 @@ export const loginUser = async (
       Date.now() + (rememberMe ? timeInMs.week : timeInMs.day)
     );
 
-    const accessToken = generateToken(user.id, user.email, user.role, "ACCESS", rememberMe);
-    const refreshToken = generateToken(user.id, user.email, user.role, "REFRESH", rememberMe);
+    const accessToken = generateToken(
+      user.id,
+      user.email,
+      user.role,
+      "ACCESS",
+      rememberMe
+    );
+    const refreshToken = generateToken(
+      user.id,
+      user.email,
+      user.role,
+      "REFRESH",
+      rememberMe
+    );
 
     await storeToken(refreshToken, user.id, expiresAt, TokenType.REFRESH);
 
-    audit("auth.login.success", { userId: user.id, email: user.email, rememberMe });
+    audit("auth.login.success", {
+      userId: user.id,
+      email: user.email,
+      rememberMe,
+    });
 
     return {
       accessToken,
@@ -114,7 +130,13 @@ export const refreshAccessToken = async (refreshToken: string) => {
       if (deleted.count === 0) {
         throw new TokenRevokedError(ERROR_MESSAGES.TOKEN_REVOKED);
       }
-      await storeToken(newRefreshToken, user.id, expiresAt, TokenType.REFRESH, tx);
+      await storeToken(
+        newRefreshToken,
+        user.id,
+        expiresAt,
+        TokenType.REFRESH,
+        tx
+      );
     });
 
     audit("auth.token.refresh", { userId: user.id });
@@ -312,7 +334,9 @@ export const generateToken = (
   };
 
   // expiresIn values are validated as ms-compatible durations by Zod in env.ts
-  return jwt.sign(payload, secretKey, { expiresIn: expiresIn as jwt.SignOptions["expiresIn"] });
+  return jwt.sign(payload, secretKey, {
+    expiresIn: expiresIn as jwt.SignOptions["expiresIn"],
+  });
 };
 
 const authenticateUser = async (email: string, password: string) => {

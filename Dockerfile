@@ -13,8 +13,8 @@ RUN npm install
 # Copy source code
 COPY . .
 
-# Generate Prisma client
-RUN npx prisma generate
+# Generate Prisma client (uses the npm script which also creates the barrel index.ts)
+RUN npm run prisma:generate
 
 # Build TypeScript
 RUN npm run build

@@ -14,6 +14,9 @@ dist
 logs
 *.log
 
+# Prisma generated
+/generated/prisma
+
 # IDE
 .vscode
 .idea
@@ -26,9 +29,3 @@ Thumbs.db
 
 # Test coverage
 coverage
-
-# Template dependencies (should not be committed)
-template/node_modules
-template/dist
-template/generated/prisma
-template/coverage

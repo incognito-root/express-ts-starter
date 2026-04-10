@@ -1,36 +1,20 @@
 {
   "compilerOptions": {
-    /* Language and Environment */
-    "target": "es2016",
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022"],
     "outDir": "./dist",
-    "rootDir": "./",
-
-    /* Modules */
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "paths": {
-      "@/*": ["./src/*"],
-      "@config/*": ["./src/config/*"],
-      "@controllers/*": ["./src/controllers/*"],
-      "@middlewares/*": ["./src/middlewares/*"],
-      "@repositories/*": ["./src/repositories/*"],
-      "@services/*": ["./src/services/*"],
-      "@utils/*": ["./src/utils/*"],
-      "@types/*": ["./src/types/*"],
-      "@errors/*": ["./src/errors/*"]
-    },
-
-    /* Interop Constraints */
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-
-    /* Type Checking */
+    "rootDir": "./src",
     "strict": true,
-    "strictNullChecks": true,
-
-    /* Completeness */
-    "skipLibCheck": true
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true
   },
-  "include": ["src", "tests", "prisma/seed.ts", "prisma/createSuperAdmin.ts"],
-  "exclude": ["vitest.config.ts", "node_modules", "dist"]
+  "include": ["src"],
+  "exclude": ["node_modules", "dist", "template"]
 }

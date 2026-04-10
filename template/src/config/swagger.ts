@@ -3,7 +3,9 @@ import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 
 import { getEnv } from "../config/env";
+// @feature:versioning
 import { CURRENT_VERSION } from "../config/versions";
+// @end:versioning
 
 const env = getEnv();
 
@@ -13,10 +15,15 @@ const options: swaggerJsdoc.Options = {
     info: {
       title: "{{PROJECT_NAME}} API Documentation",
       version: env.APP_VERSION,
+      // @feature:versioning
       description:
         `{{PROJECT_NAME}} Backend API — current API version: **${CURRENT_VERSION}**.\n\n` +
         "All versioned endpoints respond with an `X-API-Version` header. " +
         "See `docs/api-versioning.md` for the deprecation and migration policy.",
+      // @end:versioning
+      // @feature:!versioning
+      description: "{{PROJECT_NAME}} Backend API",
+      // @end:!versioning
       contact: {
         name: "{{PROJECT_NAME}} Team",
         email: "support@yourdomain.com",

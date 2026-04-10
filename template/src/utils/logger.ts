@@ -1,4 +1,6 @@
+// @feature:otel
 import { trace } from "@opentelemetry/api";
+// @end:otel
 import { Format, TransformableInfo } from "logform";
 import { createLogger, format, transports } from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";
@@ -7,6 +9,7 @@ import { getRequestId } from "./requestContext";
 
 const { combine, timestamp, printf, errors } = format;
 
+// @feature:otel
 /**
  * Returns the active OpenTelemetry trace ID for the current async context,
  * or undefined when OTEL is not configured / no active span exists.
@@ -25,14 +28,21 @@ function getTraceId(): string | undefined {
     return undefined;
   }
 }
+// @end:otel
 
 const logFormat: Format = printf((info: TransformableInfo) => {
   const { level, message, timestamp: ts, stack } = info;
   const requestId = getRequestId();
+  // @feature:otel
   const traceId = getTraceId();
   const reqPrefix = requestId ? ` [${requestId}]` : "";
   const tracePrefix = traceId ? ` trace=${traceId}` : "";
   return `${String(ts)} ${level}${reqPrefix}${tracePrefix}: ${String(stack || message)}`;
+  // @end:otel
+  // @feature:!otel
+  const reqPrefix = requestId ? ` [${requestId}]` : "";
+  return `${String(ts)} ${level}${reqPrefix}: ${String(stack || message)}`;
+  // @end:!otel
 });
 
 const logger = createLogger({

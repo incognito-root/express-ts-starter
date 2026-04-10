@@ -7,8 +7,8 @@ import helmet from "helmet";
 import { getEnv } from "./config/env";
 import { setupSwagger } from "./config/swagger";
 import { healthCheck, readinessCheck } from "./controllers/healthController";
-import errorHandler from "./middlewares/ErrorHandler";
 import { apiVersionMiddleware } from "./middlewares/ApiVersion";
+import errorHandler from "./middlewares/ErrorHandler";
 import { metricsMiddleware } from "./middlewares/Metrics";
 import { requestIdMiddleware } from "./middlewares/RequestId";
 import { requestLogger } from "./middlewares/RequestLogger";
@@ -61,6 +61,7 @@ export function createApp() {
 
   // XSS sanitization of request body
   app.use((req: Request, _res: Response, next: NextFunction) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     if (req.body) req.body = sanitizeJsonInput(req.body);
     next();
   });

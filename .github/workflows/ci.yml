@@ -73,7 +73,7 @@ jobs:
       # Scan the repository filesystem for known CVEs in npm dependencies.
       # ignore-unfixed: only fail on CVEs that have a fix available (actionable).
       - name: Trivy — filesystem scan
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@master
         with:
           scan-type: fs
           scan-ref: .
@@ -95,7 +95,7 @@ jobs:
         run: docker build -t app:${{ github.sha }} .
 
       - name: Trivy — Docker image scan
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@master
         with:
           scan-type: image
           image-ref: app:${{ github.sha }}

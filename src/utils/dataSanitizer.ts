@@ -5,7 +5,7 @@
  * for security sanitization (removing passwords, tokens, etc.) from logs and error responses.
  * The input data structure is unknown at compile time.
  */
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument */
 export const sanitizeData = (
   data: any,
   sensitiveFields: string[],

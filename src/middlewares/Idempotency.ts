@@ -105,7 +105,7 @@ async function _handleIdempotency(
     }
 
     // We hold the lock — intercept the outgoing response to cache it.
-    const originalJson = res.json.bind(res) as typeof res.json;
+    const originalJson = res.json.bind(res);
 
     res.json = function (body: unknown) {
       const statusCode = res.statusCode;

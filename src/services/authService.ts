@@ -15,9 +15,9 @@ import { withTransaction } from "../repositories/BaseRepository";
 import { TokenRepository } from "../repositories/TokenRepository";
 import { UserRepository } from "../repositories/UserRepository";
 import { timeInMs, TokenPayload, PrismaTransactionClient } from "../types";
-import logger from "../utils/logger";
 import { audit } from "../utils/auditLogger";
-import { hashPassword, verifyPassword } from "../utils/password";
+import logger from "../utils/logger";
+import { verifyPassword } from "../utils/password";
 import {
   blacklistToken,
   isTokenBlacklisted,

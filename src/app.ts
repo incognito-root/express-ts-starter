@@ -6,14 +6,15 @@ dotenv.config();
 
 // Tracing MUST be imported after dotenv.config() (so OTEL env vars are loaded)
 // and before createApp (so express is instrumented before it is required).
-import { otelShutdown } from "./tracing";
 
 import { validateEnv, getEnv } from "./config/env";
 import { createApp } from "./createApp";
 import { closeQueues } from "./queues/emailQueue";
+import { otelShutdown } from "./tracing";
 import { EmailService } from "./utils/emails/emailService";
 import { NodemailerProvider } from "./utils/emails/nodemailerProvider";
 import logger from "./utils/logger";
+// eslint-disable-next-line no-restricted-imports -- app.ts uses prisma directly for graceful shutdown only
 import prisma from "./utils/prismaClient";
 import RedisSingleton from "./utils/redis/redisClient";
 import {

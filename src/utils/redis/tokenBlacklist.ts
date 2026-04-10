@@ -1,4 +1,5 @@
 import logger from "../logger";
+
 import RedisSingleton from "./redisClient";
 
 const BLACKLIST_PREFIX = "blacklist:jti:";

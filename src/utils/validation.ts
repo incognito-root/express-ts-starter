@@ -1,5 +1,4 @@
 import { body, ValidationChain } from "express-validator";
-import DOMPurify from "isomorphic-dompurify";
 
 import { ERROR_MESSAGES } from "../constants/errorMessages";
 import { BadRequestError } from "../errors/BadRequestError";

@@ -1,8 +1,8 @@
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
 
-import { getEnv } from "../config/env";
 import { PrismaClient } from "../../generated/prisma/client";
+import { getEnv } from "../config/env";
 
 const { DATABASE_URL, DB_POOL_SIZE } = getEnv();
 

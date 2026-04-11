@@ -32,3 +32,6 @@ template/node_modules
 template/dist
 template/generated/prisma
 template/coverage
+
+# prisma generated files
+generated

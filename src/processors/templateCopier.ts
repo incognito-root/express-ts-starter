@@ -33,12 +33,14 @@ export async function copyTemplate(
       const relative = path.relative(TEMPLATE_DIR, src);
       if (!relative) return true; // root dir
 
-      // Check if the relative path starts with any excluded path
+      // Check if the relative path starts with any excluded path.
+      // Normalize to forward slashes for cross-platform correctness.
+      const relativeNormalized = relative.split(path.sep).join("/");
       for (const excluded of excludePaths) {
         const normalizedExcluded = excluded.replace(/\/$/, "");
         if (
-          relative === normalizedExcluded ||
-          relative.startsWith(normalizedExcluded + path.sep)
+          relativeNormalized === normalizedExcluded ||
+          relativeNormalized.startsWith(normalizedExcluded + "/")
         ) {
           return false;
         }

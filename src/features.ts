@@ -128,6 +128,15 @@ export const FEATURES: FeatureDefinition[] = [
     includePaths: ["ecosystem.config.js"],
     dependencies: {},
   },
+  {
+    name: "aiInstructions",
+    label: "AI Agent Instructions",
+    description:
+      "CLAUDE.md, GitHub Copilot instructions, and detailed .ai/ reference docs for coding assistants",
+    hidden: true,
+    includePaths: ["CLAUDE.md", ".github/copilot-instructions.md", ".ai/"],
+    dependencies: {},
+  },
 ];
 
 export function getFeature(name: string): FeatureDefinition | undefined {

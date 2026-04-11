@@ -10,7 +10,8 @@ export type FeatureName =
   | "csrf"
   | "audit"
   | "k6"
-  | "pm2";
+  | "pm2"
+  | "aiInstructions";
 
 export interface FeatureDefinition {
   name: FeatureName;
@@ -24,6 +25,8 @@ export interface FeatureDefinition {
   devDependencies?: Record<string, string>;
   /** Script keys to remove from package.json when disabled */
   removeScripts?: string[];
+  /** Hidden features are not shown in the interactive feature multiselect */
+  hidden?: boolean;
 }
 
 export interface GeneratorOptions {

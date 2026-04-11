@@ -62,7 +62,7 @@ export async function runPrompts(
   if (presetResult === "custom") {
     const featureResult = await p.multiselect({
       message: "Select features to include:",
-      options: FEATURES.map((f) => ({
+      options: FEATURES.filter((f) => !f.hidden).map((f) => ({
         value: f.name,
         label: f.label,
         hint: f.description,
@@ -74,6 +74,13 @@ export async function runPrompts(
   } else {
     features = PRESETS[presetResult as string].features;
   }
+
+  const includeAiInstructions = await p.confirm({
+    message: "Include AI agent instructions (CLAUDE.md, Copilot rules, .ai/ docs)?",
+    initialValue: true,
+  });
+  if (p.isCancel(includeAiInstructions)) process.exit(0);
+  if (includeAiInstructions) features = [...features, "aiInstructions"];
 
   const productionUrl = await p.text({
     message: "Production API URL:",

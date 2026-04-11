@@ -55,6 +55,7 @@ program
             process.exit(1);
           }
           features = preset.features;
+          features = [...features, "aiInstructions"]; // included by default in non-interactive mode
           productionUrl = "https://api.example.com";
           dbName = `${projectName.toLowerCase().replace(/[^a-z0-9]/g, "_")}_db`;
           initGit = opts.git;

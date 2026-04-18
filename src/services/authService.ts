@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
 
-import { Role, TokenType } from "../../generated/prisma";
+import { Role, TokenType } from "../../generated/prisma/client";
 import { getEnv } from "../config/env";
 import { ERROR_MESSAGES } from "../constants/errorMessages";
 import { BadRequestError } from "../errors/BadRequestError";
@@ -10,19 +10,11 @@ import { NotFoundError } from "../errors/NotFoundError";
 import { TokenExpiredError } from "../errors/TokenExpiredError";
 import { TokenRevokedError } from "../errors/TokenRevokedError";
 import { UnauthorizedError } from "../errors/UnauthorizedError";
-// @feature:bullmq
 import { queueVerificationEmail } from "../queues/emailQueue";
-// @end:bullmq
-// @feature:!bullmq
-import { EmailService } from "../utils/emails/emailService";
-// @end:!bullmq
 import { withTransaction } from "../repositories/BaseRepository";
 import { TokenRepository } from "../repositories/TokenRepository";
 import { UserRepository } from "../repositories/UserRepository";
 import { timeInMs, TokenPayload, PrismaTransactionClient } from "../types";
-// @feature:audit
-import { audit } from "../utils/auditLogger";
-// @end:audit
 import logger from "../utils/logger";
 import { verifyPassword } from "../utils/password";
 import {
@@ -38,7 +30,7 @@ const tokenRepository = new TokenRepository();
 export const loginUser = async (
   email: string,
   password: string,
-  rememberMe: boolean
+  rememberMe: boolean,
 ) => {
   try {
     email = email.toLowerCase();
@@ -47,12 +39,12 @@ export const loginUser = async (
 
     if (!user.isVerified) {
       throw new UnauthorizedError(
-        "Email not verified. Please check your email for a verification link."
+        "Email not verified. Please check your email for a verification link.",
       );
     }
 
     const expiresAt = new Date(
-      Date.now() + (rememberMe ? timeInMs.week : timeInMs.day)
+      Date.now() + (rememberMe ? timeInMs.week : timeInMs.day),
     );
 
     const accessToken = generateToken(
@@ -60,25 +52,17 @@ export const loginUser = async (
       user.email,
       user.role,
       "ACCESS",
-      rememberMe
+      rememberMe,
     );
     const refreshToken = generateToken(
       user.id,
       user.email,
       user.role,
       "REFRESH",
-      rememberMe
+      rememberMe,
     );
 
     await storeToken(refreshToken, user.id, expiresAt, TokenType.REFRESH);
-
-    // @feature:audit
-    audit("auth.login.success", {
-      userId: user.id,
-      email: user.email,
-      rememberMe,
-    });
-    // @end:audit
 
     return {
       accessToken,
@@ -89,9 +73,6 @@ export const loginUser = async (
     };
   } catch (error: unknown) {
     if (error instanceof UnauthorizedError) {
-      // @feature:audit
-      audit("auth.login.failure", { email, reason: error.message });
-      // @end:audit
       throw error;
     }
 
@@ -120,18 +101,18 @@ export const refreshAccessToken = async (refreshToken: string) => {
       user.email,
       user.role,
       "ACCESS",
-      decoded.rememberMe
+      decoded.rememberMe,
     );
     const newRefreshToken = generateToken(
       user.id,
       user.email,
       user.role,
       "REFRESH",
-      decoded.rememberMe
+      decoded.rememberMe,
     );
 
     const expiresAt = new Date(
-      Date.now() + (decoded.rememberMe ? timeInMs.week : timeInMs.day)
+      Date.now() + (decoded.rememberMe ? timeInMs.week : timeInMs.day),
     );
 
     await withTransaction(async (tx) => {
@@ -146,13 +127,9 @@ export const refreshAccessToken = async (refreshToken: string) => {
         user.id,
         expiresAt,
         TokenType.REFRESH,
-        tx
+        tx,
       );
     });
-
-    // @feature:audit
-    audit("auth.token.refresh", { userId: user.id });
-    // @end:audit
 
     return {
       accessToken: newAccessToken,
@@ -206,7 +183,7 @@ export const invalidateToken = async (token: string) => {
 
 export const validateToken = async (
   token: string,
-  tokenType: "ACCESS" | "REFRESH" | "VERIFY_EMAIL"
+  tokenType: "ACCESS" | "REFRESH" | "VERIFY_EMAIL",
 ) => {
   try {
     const secretKey = getEnv().JWT_SECRET;
@@ -263,7 +240,7 @@ export const storeToken = async (
   userId: string,
   expiresAt: Date,
   type: TokenType,
-  tx?: PrismaTransactionClient
+  tx?: PrismaTransactionClient,
 ) => {
   await tokenRepository.createToken(
     {
@@ -272,7 +249,7 @@ export const storeToken = async (
       expiresAt,
       type,
     },
-    tx
+    tx,
   );
 };
 
@@ -325,7 +302,7 @@ export const generateToken = (
   userEmail: string,
   role: Role,
   tokenType: "ACCESS" | "REFRESH" | "VERIFY_EMAIL",
-  rememberMe: boolean
+  rememberMe: boolean,
 ) => {
   const secretKey = getEnv().JWT_SECRET;
   const expiresIn =
@@ -372,7 +349,7 @@ export const sendVerificationEmail = async (
   userId: string,
   email: string,
   name: string,
-  role: Role
+  role: Role,
 ) => {
   try {
     const verificationToken = generateToken(
@@ -380,7 +357,7 @@ export const sendVerificationEmail = async (
       email,
       role,
       "VERIFY_EMAIL",
-      false
+      false,
     );
 
     const expiresAt = new Date(Date.now() + timeInMs.day);
@@ -388,10 +365,9 @@ export const sendVerificationEmail = async (
       verificationToken,
       userId,
       expiresAt,
-      TokenType.VERIFY_EMAIL
+      TokenType.VERIFY_EMAIL,
     );
 
-    // @feature:bullmq
     await queueVerificationEmail({
       userId,
       email,
@@ -400,14 +376,6 @@ export const sendVerificationEmail = async (
     });
 
     logger.info("Verification email queued successfully", { userId, email });
-    // @end:bullmq
-    // @feature:!bullmq
-    const verificationLink = `${getEnv().FRONTEND_URL}/verify-email?token=${verificationToken}`;
-    const emailService = EmailService.getInstance();
-    await emailService.sendEmailVerificationEmail({ to: email, name, verificationLink });
-
-    logger.info("Verification email sent successfully", { userId, email });
-    // @end:!bullmq
   } catch (error: unknown) {
     logger.error("Failed to queue verification email", {
       userId,
@@ -416,7 +384,7 @@ export const sendVerificationEmail = async (
     });
     throw new InternalServerError(
       ERROR_MESSAGES.ERROR_SENDING_VERIFICATION_EMAIL,
-      { cause: error as Error }
+      { cause: error as Error },
     );
   }
 };
@@ -441,14 +409,10 @@ export const verifyEmail = async (token: string) => {
 
     await tokenRepository.deleteByUserIdAndType(
       user.id,
-      TokenType.VERIFY_EMAIL
+      TokenType.VERIFY_EMAIL,
     );
 
     logger.info("Email verified successfully", { userId: user.id });
-    // @feature:audit
-    audit("auth.email.verified", { userId: user.id, email: user.email });
-    // @end:audit
-
     return user;
   } catch (error: unknown) {
     if (

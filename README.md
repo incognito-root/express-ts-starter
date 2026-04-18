@@ -30,22 +30,22 @@ npx @incognito-root/create-express-ts-starter my-app --preset minimal --yes --no
 
 ### CLI Flags
 
-| Flag | Description |
-|---|---|
+| Flag              | Description                                       |
+| ----------------- | ------------------------------------------------- |
 | `--preset <name>` | Use a preset: `minimal`, `recommended`, or `full` |
-| `--yes` | Skip all prompts, use defaults |
-| `--no-git` | Skip `git init` |
-| `--no-install` | Skip `npm install` |
+| `--yes`           | Skip all prompts, use defaults                    |
+| `--no-git`        | Skip `git init`                                   |
+| `--no-install`    | Skip `npm install`                                |
 
 ---
 
 ## Presets
 
-| Preset | What's included |
-|---|---|
-| **minimal** | Core Express + TypeScript + Prisma + Redis + Auth + Helmet + Rate limiting + Logging. No optional features. |
-| **recommended** | Minimal + BullMQ email queue, Prometheus metrics, API versioning, CSRF protection, audit logging |
-| **full** | Everything enabled (all 12 optional features) |
+| Preset          | What's included                                                                                             |
+| --------------- | ----------------------------------------------------------------------------------------------------------- |
+| **minimal**     | Core Express + TypeScript + Prisma + Redis + Auth + Helmet + Rate limiting + Logging. No optional features. |
+| **recommended** | Minimal + BullMQ email queue, Prometheus metrics, API versioning, CSRF protection, audit logging            |
+| **full**        | Everything enabled (all 12 optional features)                                                               |
 
 ---
 
@@ -53,35 +53,35 @@ npx @incognito-root/create-express-ts-starter my-app --preset minimal --yes --no
 
 All presets include the core stack. These features can be toggled on or off:
 
-| Feature | Description |
-|---|---|
-| WebSocket (Socket.IO) | Real-time communication with Redis adapter for horizontal scaling |
-| File Uploads | Multer + Cloudinary storage with image presets |
-| Email Queue (BullMQ) | Background email processing via Redis-backed queue |
-| Prometheus Metrics | HTTP request metrics and `/metrics` endpoint via prom-client |
-| OpenTelemetry Tracing | Distributed tracing with OTLP exporter |
-| API Versioning | URL path versioning with RFC 8594 deprecation/sunset headers |
-| Idempotency Middleware | Redis-backed idempotency guard for safe request retries |
-| Circuit Breaker | Resilience pattern for external service calls (opossum) |
-| CSRF Protection | Double-submit cookie CSRF via csrf-csrf |
-| Audit Logger | Structured audit logging with daily rotation |
-| k6 Load Tests | Pre-built smoke, load, and rate-limit test scripts |
-| PM2 Ecosystem | PM2 process manager config for production |
+| Feature                | Description                                                       |
+| ---------------------- | ----------------------------------------------------------------- |
+| WebSocket (Socket.IO)  | Real-time communication with Redis adapter for horizontal scaling |
+| File Uploads           | Multer + Cloudinary storage with image presets                    |
+| Email Queue (BullMQ)   | Background email processing via Redis-backed queue                |
+| Prometheus Metrics     | HTTP request metrics and `/metrics` endpoint via prom-client      |
+| OpenTelemetry Tracing  | Distributed tracing with OTLP exporter                            |
+| API Versioning         | URL path versioning with RFC 8594 deprecation/sunset headers      |
+| Idempotency Middleware | Redis-backed idempotency guard for safe request retries           |
+| Circuit Breaker        | Resilience pattern for external service calls (opossum)           |
+| CSRF Protection        | Double-submit cookie CSRF via csrf-csrf                           |
+| Audit Logger           | Structured audit logging with daily rotation                      |
+| k6 Load Tests          | Pre-built smoke, load, and rate-limit test scripts                |
+| PM2 Ecosystem          | PM2 process manager config for production                         |
 
 ---
 
 ## Core Stack (always included)
 
-| Layer | Technology |
-|---|---|
-| Runtime | Node.js 20, Express 5, TypeScript 5 |
-| Database | PostgreSQL 16 + Prisma 7 |
-| Cache | Redis 7 |
-| Auth | JWT dual-token (httpOnly cookies), bcrypt |
-| Validation | Zod (env), express-validator (requests) |
-| Logging | Winston + daily rotate, request ID correlation |
-| Security | Helmet, Redis-backed rate limiting, XSS sanitization (DOMPurify) |
-| Testing | Vitest 4, Supertest |
+| Layer      | Technology                                                       |
+| ---------- | ---------------------------------------------------------------- |
+| Runtime    | Node.js 20, Express 5, TypeScript 5                              |
+| Database   | PostgreSQL 16 + Prisma 7                                         |
+| Cache      | Redis 7                                                          |
+| Auth       | JWT dual-token (httpOnly cookies), bcrypt                        |
+| Validation | Zod (env), express-validator (requests)                          |
+| Logging    | Winston + daily rotate, request ID correlation                   |
+| Security   | Helmet, Redis-backed rate limiting, XSS sanitization (DOMPurify) |
+| Testing    | Vitest 4, Supertest                                              |
 
 ---
 
@@ -113,12 +113,12 @@ The server starts at `http://localhost:3001`.
 
 ### Key Endpoints
 
-| Endpoint | Description |
-|---|---|
-| `GET /health` | Health check (detailed in dev, minimal in prod) |
-| `GET /ready` | Readiness probe (checks DB + Redis) |
-| `GET /metrics` | Prometheus metrics (if enabled, Bearer-gated) |
-| `GET /api-docs` | Swagger UI (dev only) |
+| Endpoint        | Description                                     |
+| --------------- | ----------------------------------------------- |
+| `GET /health`   | Health check (detailed in dev, minimal in prod) |
+| `GET /ready`    | Readiness probe (checks DB + Redis)             |
+| `GET /metrics`  | Prometheus metrics (if enabled, Bearer-gated)   |
+| `GET /api-docs` | Swagger UI (dev only)                           |
 
 ---
 
@@ -180,13 +180,13 @@ model Token {
   id, token (unique), type, userId, expiresAt, createdAt
 }
 
-model Organisation {
+model Organization {
   id, name, slug (unique), isActive, deletedAt, timestamps
 }
 
 model OrganizationMember {
-  id, userId, organisationId, role, createdAt
-  unique constraint on [userId, organisationId]
+  id, userId, organizationId, role, createdAt
+  unique constraint on [userId, organizationId]
 }
 ```
 
@@ -225,16 +225,16 @@ docker compose up -d
 
 ## Available Scripts (in generated project)
 
-| Script | Description |
-|---|---|
-| `npm run dev` | Start dev server with hot reload (nodemon) |
-| `npm run build` | Compile TypeScript to `dist/` |
-| `npm start` | Start production server |
-| `npm test` | Run unit tests |
+| Script                     | Description                                   |
+| -------------------------- | --------------------------------------------- |
+| `npm run dev`              | Start dev server with hot reload (nodemon)    |
+| `npm run build`            | Compile TypeScript to `dist/`                 |
+| `npm start`                | Start production server                       |
+| `npm test`                 | Run unit tests                                |
 | `npm run test:integration` | Run integration tests (needs Docker services) |
-| `npm run prisma:generate` | Generate Prisma client |
-| `npm run prisma:migrate` | Create + apply migration |
-| `npm run prisma:seed` | Seed default org + superadmin |
+| `npm run prisma:generate`  | Generate Prisma client                        |
+| `npm run prisma:migrate`   | Create + apply migration                      |
+| `npm run prisma:seed`      | Seed default org + superadmin                 |
 
 Additional scripts are included depending on selected features (k6 load tests, Docker commands, etc.).
 

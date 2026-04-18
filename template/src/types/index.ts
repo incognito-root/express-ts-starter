@@ -7,7 +7,7 @@ export * from "./util/rateLimiter";
 export * from "./core/express";
 export * from "./api/auth";
 export * from "./api/health";
-export * from "./repository/organisation";
+export * from "./repository/organization";
 export * from "./repository/user";
 export * from "./repository/token";
 // @feature:bullmq

@@ -6,10 +6,10 @@ This project uses a **dual-token JWT system** with tokens delivered exclusively 
 
 ### Tokens
 
-| Token | Cookie name | Lifetime | Storage |
-|---|---|---|---|
-| Access token | `accessToken` | 15 minutes | `httpOnly` cookie only |
-| Refresh token | `refreshToken` | 7 days | `httpOnly` cookie + hashed in DB |
+| Token         | Cookie name    | Lifetime   | Storage                          |
+| ------------- | -------------- | ---------- | -------------------------------- |
+| Access token  | `accessToken`  | 15 minutes | `httpOnly` cookie only           |
+| Refresh token | `refreshToken` | 7 days     | `httpOnly` cookie + hashed in DB |
 
 The access token contains: `{ sub: userId, email, role, jti: uuid, tokenType: "access" }`.
 The refresh token contains: `{ sub: userId, jti: uuid, tokenType: "refresh" }`.
@@ -73,6 +73,7 @@ res.cookie("csrfToken", token, csrfCookieOptions);
 ```
 
 Key differences:
+
 - Auth cookies: `sameSite: "strict"` — maximum CSRF protection
 - CSRF cookie: `sameSite: "lax"` — must be readable by frontend JavaScript to submit in headers
 
@@ -88,10 +89,16 @@ Implementation: `src/middlewares/Csrf.ts` using the `csrf-csrf` package (double-
 
 ```typescript
 // In route file
-router.post("/users", csrfMiddleware, validateBody(createUserSchema), userController.create);
+router.post(
+  "/users",
+  csrfMiddleware,
+  validateBody(createUserSchema),
+  userController.create
+);
 ```
 
 **Routes exempt from CSRF:**
+
 - GET, HEAD, OPTIONS (idempotent, no state change)
 - `POST /v1/auth/refresh` — cookie-only request, `sameSite=strict` on auth cookies already prevents CSRF
 
@@ -106,6 +113,7 @@ Implementation: `src/utils/redis/redisRateLimiter.ts` + `src/middlewares/RateLim
 **Behavior when Redis is unavailable: FAILS CLOSED.** The middleware throws `InternalServerError` rather than allowing potentially unlimited requests. This is an intentional security decision.
 
 Apply rate limiting to:
+
 - `POST /v1/auth/login` — e.g. 5 attempts per 15 minutes per IP
 - `POST /v1/auth/register` — e.g. 3 attempts per hour per IP
 - `POST /v1/auth/forgot-password` — e.g. 3 attempts per hour
@@ -113,8 +121,16 @@ Apply rate limiting to:
 
 ```typescript
 // In route file
-const loginLimiter = createRateLimiter({ maxRequests: 5, windowMs: 15 * 60 * 1000 });
-router.post("/auth/login", loginLimiter, validateBody(loginSchema), authController.login);
+const loginLimiter = createRateLimiter({
+  maxRequests: 5,
+  windowMs: 15 * 60 * 1000,
+});
+router.post(
+  "/auth/login",
+  loginLimiter,
+  validateBody(loginSchema),
+  authController.login
+);
 ```
 
 ---
@@ -144,10 +160,12 @@ if (isBlacklisted) throw new UnauthorizedError(ERROR_MESSAGES.TOKEN_REVOKED);
 The system supports two levels of roles:
 
 **Global role** (on the `User` model):
+
 - `admin` — full platform access
 - `member` — standard user access
 
-**Organisation role** (on the `OrganizationMember` model):
+**Organization role** (on the `OrganizationMember` model):
+
 - `owner` — org-level admin
 - `admin` — org management
 - `member` — standard org member

@@ -33,16 +33,16 @@ export const ERROR_MESSAGES = {
   ERROR_FETCHING_USERS: "Error fetching users.",
   USER_DEPENDENCIES_EXIST: "Cannot delete user due to existing dependencies.",
 
-  // Organisation errors
-  ORGANISATION_NOT_FOUND: "Organisation not found.",
-  ORGANISATION_ALREADY_EXISTS: "Organisation with this name already exists.",
-  ACTIVE_ORGANISATION_NOT_FOUND: "Active organisation not found.",
-  ERROR_CREATING_ORGANISATION: "Error creating organisation.",
-  ERROR_UPDATING_ORGANISATION: "Error updating organisation.",
-  ERROR_DELETING_ORGANISATION: "Error deleting organisation.",
-  ERROR_REACTIVATING_ORGANISATION: "Error reactivating organisation.",
-  ERROR_FETCHING_ORGANISATION: "Error fetching organisation.",
-  ERROR_FETCHING_ORGANISATIONS: "Error fetching organisations.",
+  // Organization errors
+  organization_NOT_FOUND: "Organization not found.",
+  organization_ALREADY_EXISTS: "Organization with this name already exists.",
+  ACTIVE_organization_NOT_FOUND: "Active organization not found.",
+  ERROR_CREATING_organization: "Error creating organization.",
+  ERROR_UPDATING_organization: "Error updating organization.",
+  ERROR_DELETING_organization: "Error deleting organization.",
+  ERROR_REACTIVATING_organization: "Error reactivating organization.",
+  ERROR_FETCHING_organization: "Error fetching organization.",
+  ERROR_FETCHING_organizationS: "Error fetching organizations.",
 
   // Authorization errors
   SUPER_ADMIN_REQUIRED: "This action requires SUPER_ADMIN privileges.",

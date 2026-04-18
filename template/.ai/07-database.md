@@ -2,7 +2,7 @@
 
 ## The Fundamental Rule
 
-**`prismaClient` may ONLY be imported in `src/repositories/**`.**
+**`prismaClient` may ONLY be imported in `src/repositories/**`.\*\*
 
 ESLint's `no-restricted-imports` rule makes this a **build error** everywhere else. If a service needs data, it calls a repository method. It does not import Prisma.
 
@@ -66,6 +66,7 @@ async rotateRefreshToken(oldTokenId: string, newTokenData: CreateTokenDTO) {
 ### Creating a new repository
 
 1. Define DTO types in `src/types/repository/<domain>.ts`:
+
 ```typescript
 export interface CreatePostDTO {
   title: string;
@@ -81,11 +82,13 @@ export interface UpdatePostDTO {
 ```
 
 2. Export from `src/types/index.ts`:
+
 ```typescript
 export * from "./repository/post";
 ```
 
 3. Create `src/repositories/PostRepository.ts`:
+
 ```typescript
 import prisma from "../utils/prismaClient";
 import { BaseRepository } from "./BaseRepository";
@@ -117,6 +120,7 @@ export class PostRepository extends BaseRepository {
 ```
 
 **Key patterns in every repository method:**
+
 - `tx?: PrismaTransactionClient` parameter on every method — required for transaction support
 - `const client = tx ?? prisma` — use transaction client if provided, otherwise global singleton
 - `deleteMany` + return count instead of `delete` — lets callers detect if the record already didn't exist (count === 0)
@@ -127,14 +131,15 @@ export class PostRepository extends BaseRepository {
 
 `prisma/schema.prisma` contains 4 base models:
 
-| Model | Purpose |
-|---|---|
-| `User` | Core user entity; has `role: UserRole` |
-| `Token` | Refresh token storage; linked to User |
-| `Organisation` | Multi-tenant org entity |
-| `OrganizationMember` | Junction table; User ↔ Organisation with `role` |
+| Model                | Purpose                                         |
+| -------------------- | ----------------------------------------------- |
+| `User`               | Core user entity; has `role: UserRole`          |
+| `Token`              | Refresh token storage; linked to User           |
+| `Organization`       | Multi-tenant org entity                         |
+| `OrganizationMember` | Junction table; User ↔ Organization with `role` |
 
 Run migrations:
+
 ```bash
 # Development (creates migration file + applies)
 npx prisma migrate dev --name describe_the_change
@@ -178,6 +183,7 @@ async listPosts(opts: { cursor?: string; limit: number }) {
 ## Query Best Practices
 
 **Always use `select` to limit returned fields** — avoids accidentally exposing passwords or sensitive data:
+
 ```typescript
 // Wrong — returns all fields including passwordHash
 return client.user.findUnique({ where: { id } });
@@ -190,15 +196,17 @@ return client.user.findUnique({
 ```
 
 **Use `include` sparingly** — only when the relation is always needed, not "just in case":
+
 ```typescript
 // Only include if the caller always needs the org members
-return client.organisation.findUnique({
+return client.organization.findUnique({
   where: { id },
   include: { members: { select: { userId: true, role: true } } },
 });
 ```
 
 **Use `findUnique`/`findFirst` before updates** when you need to verify the record exists:
+
 ```typescript
 const post = await client.post.findUnique({ where: { id } });
 if (!post) throw new NotFoundError(ERROR_MESSAGES.POST_NOT_FOUND);
@@ -206,6 +214,7 @@ if (!post) throw new NotFoundError(ERROR_MESSAGES.POST_NOT_FOUND);
 ```
 
 **Use `upsert` for idempotent write operations:**
+
 ```typescript
 return client.token.upsert({
   where: { id: tokenId },

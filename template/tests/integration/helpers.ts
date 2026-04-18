@@ -63,7 +63,7 @@ export { DEFAULT_PASSWORD };
 export async function cleanDatabase() {
   await prisma.token.deleteMany();
   await prisma.organizationMember.deleteMany();
-  await prisma.organisation.deleteMany();
+  await prisma.organization.deleteMany();
   await prisma.user.deleteMany();
 }
 

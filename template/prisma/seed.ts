@@ -22,20 +22,20 @@ async function main() {
     await prisma.organizationMember.deleteMany();
     await prisma.token.deleteMany();
     await prisma.user.deleteMany();
-    await prisma.organisation.deleteMany();
+    await prisma.organization.deleteMany();
   }
 
-  // Create default organisation
-  const org = await prisma.organisation.upsert({
+  // Create default organization
+  const org = await prisma.organization.upsert({
     where: { slug: "default-org" },
     update: {},
     create: {
-      name: "Default Organisation",
+      name: "Default Organization",
       slug: "default-org",
       isActive: true,
     },
   });
-  console.log(`✅ Organisation: ${org.name} (${org.id})`);
+  console.log(`✅ Organization: ${org.name} (${org.id})`);
 
   // Create super admin user
   const superAdminPassword = await hashPassword("SuperAdmin@123");
@@ -57,15 +57,15 @@ async function main() {
   // Add super admin as OWNER of default org
   await prisma.organizationMember.upsert({
     where: {
-      userId_organisationId: {
+      userId_organizationId: {
         userId: superAdmin.id,
-        organisationId: org.id,
+        organizationId: org.id,
       },
     },
     update: {},
     create: {
       userId: superAdmin.id,
-      organisationId: org.id,
+      organizationId: org.id,
       role: Role.OWNER,
     },
   });

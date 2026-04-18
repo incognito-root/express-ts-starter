@@ -1,4 +1,4 @@
-import { User } from "../../generated/prisma";
+import { User } from "../../generated/prisma/client";
 import { PrismaTransactionClient } from "../types";
 import { CreateUserDTO } from "../types/repository/user";
 import prisma from "../utils/prismaClient";

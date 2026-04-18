@@ -1,21 +1,21 @@
-import { Organisation } from "../../generated/prisma";
-import { PrismaTransactionClient } from "../types";
+import { Organization } from "../../generated/prisma/client.js";
+import { PrismaTransactionClient } from "../types/index.js";
 import {
-  CreateOrganisationDTO,
-  UpdateOrganisationDTO,
-  FindOrganisationOptions,
-} from "../types/repository/organisation";
-import prisma from "../utils/prismaClient";
+  CreateorganizationDTO,
+  UpdateorganizationDTO,
+  FindorganizationOptions,
+} from "../types/repository/organization.js";
+import prisma from "../utils/prismaClient.js";
 
-import { BaseRepository } from "./BaseRepository";
+import { BaseRepository } from "./BaseRepository.js";
 
-export class OrganisationRepository extends BaseRepository<Organisation> {
+export class organizationRepository extends BaseRepository<Organization> {
   async findBySlug(
     slug: string,
     tx?: PrismaTransactionClient
-  ): Promise<Organisation | null> {
+  ): Promise<Organization | null> {
     const client = tx ?? prisma;
-    return client.organisation.findUnique({
+    return client.organization.findUnique({
       where: { slug },
     });
   }
@@ -23,9 +23,9 @@ export class OrganisationRepository extends BaseRepository<Organisation> {
   async findActiveById(
     id: string,
     tx?: PrismaTransactionClient
-  ): Promise<Organisation | null> {
+  ): Promise<Organization | null> {
     const client = tx ?? prisma;
-    return client.organisation.findFirst({
+    return client.organization.findFirst({
       where: {
         id,
         isActive: true,
@@ -36,63 +36,63 @@ export class OrganisationRepository extends BaseRepository<Organisation> {
   async findById(
     id: string,
     tx?: PrismaTransactionClient
-  ): Promise<Organisation | null> {
+  ): Promise<Organization | null> {
     const client = tx ?? prisma;
-    return client.organisation.findUnique({
+    return client.organization.findUnique({
       where: { id },
     });
   }
 
-  async createOrganisation(
-    data: CreateOrganisationDTO,
+  async createorganization(
+    data: CreateorganizationDTO,
     tx?: PrismaTransactionClient
-  ): Promise<Organisation> {
+  ): Promise<Organization> {
     const client = tx ?? prisma;
-    return client.organisation.create({
+    return client.organization.create({
       data,
     });
   }
 
-  async updateOrganisation(
+  async updateorganization(
     id: string,
-    data: UpdateOrganisationDTO,
+    data: UpdateorganizationDTO,
     tx?: PrismaTransactionClient
-  ): Promise<Organisation> {
+  ): Promise<Organization> {
     const client = tx ?? prisma;
-    return client.organisation.update({
+    return client.organization.update({
       where: { id },
       data,
     });
   }
 
-  async deactivateOrganisation(
+  async deactivateorganization(
     id: string,
     tx?: PrismaTransactionClient
-  ): Promise<Organisation> {
+  ): Promise<Organization> {
     const client = tx ?? prisma;
-    return client.organisation.update({
+    return client.organization.update({
       where: { id },
       data: { isActive: false },
     });
   }
 
-  async reactivateOrganisation(
+  async reactivateorganization(
     id: string,
     tx?: PrismaTransactionClient
-  ): Promise<Organisation> {
+  ): Promise<Organization> {
     const client = tx ?? prisma;
-    return client.organisation.update({
+    return client.organization.update({
       where: { id },
       data: { isActive: true },
     });
   }
 
   async findAllActive(
-    options?: FindOrganisationOptions,
+    options?: FindorganizationOptions,
     tx?: PrismaTransactionClient
-  ): Promise<Organisation[]> {
+  ): Promise<Organization[]> {
     const client = tx ?? prisma;
-    return client.organisation.findMany({
+    return client.organization.findMany({
       where: {
         isActive: true,
       },
@@ -102,7 +102,7 @@ export class OrganisationRepository extends BaseRepository<Organisation> {
 
   async countActive(tx?: PrismaTransactionClient): Promise<number> {
     const client = tx ?? prisma;
-    return client.organisation.count({
+    return client.organization.count({
       where: {
         isActive: true,
       },
@@ -110,31 +110,31 @@ export class OrganisationRepository extends BaseRepository<Organisation> {
   }
 
   async findAll(
-    options?: FindOrganisationOptions & { includeInactive?: boolean },
+    options?: FindorganizationOptions & { includeInactive?: boolean },
     tx?: PrismaTransactionClient
-  ): Promise<{ organisations: Organisation[]; total: number }> {
+  ): Promise<{ organizations: Organization[]; total: number }> {
     const client = tx ?? prisma;
     const where = options?.includeInactive ? {} : { isActive: true };
 
-    const [organisations, total] = await Promise.all([
-      client.organisation.findMany({
+    const [organizations, total] = await Promise.all([
+      client.organization.findMany({
         where,
         skip: options?.skip,
         take: options?.take,
         orderBy: options?.orderBy ?? { createdAt: "desc" },
       }),
-      client.organisation.count({ where }),
+      client.organization.count({ where }),
     ]);
 
-    return { organisations, total };
+    return { organizations, total };
   }
 
-  async deleteOrganisation(
+  async deleteorganization(
     id: string,
     tx?: PrismaTransactionClient
-  ): Promise<Organisation> {
+  ): Promise<Organization> {
     const client = tx ?? prisma;
-    return client.organisation.delete({
+    return client.organization.delete({
       where: { id },
     });
   }

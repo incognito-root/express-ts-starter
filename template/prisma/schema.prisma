@@ -46,7 +46,7 @@ model Token {
   @@index([token])
 }
 
-model Organisation {
+model Organization {
   id        String    @id @default(cuid())
   name      String
   slug      String    @unique
@@ -63,16 +63,16 @@ model Organisation {
 model OrganizationMember {
   id             String   @id @default(cuid())
   userId         String
-  organisationId String
+  organizationId String
   role           Role
   createdAt      DateTime @default(now())
 
   user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  organisation Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, organisationId])
+  @@unique([userId, organizationId])
   @@index([userId])
-  @@index([organisationId])
+  @@index([organizationId])
 }
 
 // ============================================================

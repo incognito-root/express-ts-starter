@@ -54,6 +54,7 @@ Prisma  (generated/prisma/client.ts)
 ESLint `no-restricted-imports` in `.eslintrc.js` makes importing `prismaClient` outside `src/repositories/**` a **build error**. This is intentional and must not be disabled.
 
 Overrides per layer:
+
 - `src/repositories/**` — `no-restricted-imports` off, all unsafe TypeScript rules off
 - `src/controllers/**` and `src/middlewares/**` — unsafe TypeScript rules demoted to warn
 - `src/services/**` — all unsafe rules as warn
@@ -160,7 +161,7 @@ src/
 │   ├── BaseRepository.ts   # withTransaction() + common utils
 │   ├── UserRepository.ts
 │   ├── TokenRepository.ts
-│   └── OrganisationRepository.ts
+│   └── organizationRepository.ts
 ├── routes/
 │   ├── authRoutes.ts
 │   └── indexRoutes.ts

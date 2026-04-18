@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import supertest from "supertest";
-import { Role, TokenType } from "../../../generated/prisma";
 import { createApp } from "../../../src/createApp";
 import RedisSingleton from "../../../src/utils/redis/redisClient";
 import { generateToken, storeToken } from "../../../src/services/authService";
@@ -8,6 +7,7 @@ import prisma from "../../../src/utils/prismaClient";
 import { getCsrfToken } from "../helpers/csrf";
 import { seedTestUser, cleanDatabase } from "../helpers/db";
 import { flushRedis } from "../helpers/redis";
+import { Role, TokenType } from "../../../generated/prisma/enums";
 
 const TEST_EMAIL = "verify-email@example.com";
 const TEST_PASSWORD = "TestPass@123";

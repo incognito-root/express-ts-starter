@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
-import { Role } from "../generated/prisma";
+import { Role } from "../generated/prisma/enums";
 import { PrismaClient } from "../generated/prisma/client";
 import { hashPassword } from "../src/utils/password";
 
@@ -9,7 +9,6 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
 
-// @ts-expect-error -- @types/pg version mismatch between `pg` and `@prisma/adapter-pg` bundled types
 const adapter = new PrismaPg(pool);
 
 const prisma = new PrismaClient({ adapter });

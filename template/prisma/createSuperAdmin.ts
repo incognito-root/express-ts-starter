@@ -1,7 +1,7 @@
 /**
  * Super Admin Creation Script
  *
- * This script safely creates a Super Admin account for the {{PROJECT_NAME}} platform.
+ * This script safely creates a Super Admin account for the backend-lfl platform.
  *
  * SECURITY NOTES:
  * - Credentials are read from environment variables (never hardcoded)
@@ -24,7 +24,7 @@
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
 import { PrismaClient } from "../generated/prisma/client";
-import { Role } from "../generated/prisma";
+import { Role } from "../generated/prisma/enums";
 import { hashPassword } from "../src/utils/password";
 import * as readline from "readline";
 import dotenv from "dotenv";
@@ -36,7 +36,6 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
 
-// @ts-expect-error -- @types/pg version mismatch between `pg` and `@prisma/adapter-pg` bundled types
 const adapter = new PrismaPg(pool);
 
 const prisma = new PrismaClient({ adapter });
@@ -183,7 +182,7 @@ async function getCredentials(): Promise<SuperAdminCredentials> {
  * Main function to create super admin
  */
 async function createSuperAdmin(): Promise<void> {
-  console.log("\n🛡️  {{PROJECT_NAME}} Super Admin Creation Script");
+  console.log("\n🛡️  backend-lfl Super Admin Creation Script");
   console.log("==========================================\n");
 
   try {

@@ -1,4 +1,4 @@
-import { Role } from "../../generated/prisma";
+import { Role } from "../../generated/prisma/enums";
 import { ERROR_MESSAGES } from "../constants/errorMessages";
 import { InternalServerError } from "../errors/InternalServerError";
 import { UserRepository } from "../repositories/UserRepository";

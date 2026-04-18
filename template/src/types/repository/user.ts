@@ -1,4 +1,4 @@
-import { Role } from "../../../generated/prisma";
+import { Role } from "../../../generated/prisma/enums";
 
 export interface CreateUserDTO {
   name: string;

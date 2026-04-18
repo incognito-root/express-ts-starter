@@ -1,4 +1,4 @@
-import { TokenType } from "../../../generated/prisma";
+import { TokenType } from "../../../generated/prisma/enums";
 
 /**
  * Data Transfer Object for creating a new token

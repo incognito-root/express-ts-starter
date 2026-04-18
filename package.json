@@ -1,6 +1,6 @@
 {
   "name": "@incognito-root/create-express-ts-starter",
-  "version": "1.1.2",
+  "version": "2.0.0",
   "description": "Scaffold a production-ready Express + TypeScript project with customizable features",
   "type": "module",
   "bin": {

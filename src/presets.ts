@@ -16,7 +16,7 @@ export const PRESETS: Record<string, Preset> = {
     name: "Recommended",
     description:
       "Production-ready with commonly needed features.",
-    features: ["bullmq", "metrics", "versioning", "csrf", "audit"],
+    features: ["bullmq", "metrics", "versioning", "csrf", "audit", "resend"],
   },
   full: {
     name: "Full",
@@ -30,6 +30,7 @@ export const PRESETS: Record<string, Preset> = {
       "versioning",
       "idempotency",
       "circuitBreaker",
+      "resend",
       "csrf",
       "audit",
       "k6",

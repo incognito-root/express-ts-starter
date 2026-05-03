@@ -44,8 +44,8 @@ npx @incognito-root/create-express-ts-starter my-app --preset minimal --yes --no
 | Preset          | What's included                                                                                             |
 | --------------- | ----------------------------------------------------------------------------------------------------------- |
 | **minimal**     | Core Express + TypeScript + Prisma + Redis + Auth + Helmet + Rate limiting + Logging. No optional features. |
-| **recommended** | Minimal + BullMQ email queue, Prometheus metrics, API versioning, CSRF protection, audit logging            |
-| **full**        | Everything enabled (all 12 optional features)                                                               |
+| **recommended** | Minimal + BullMQ email queue, Prometheus metrics, API versioning, CSRF protection, audit logging, Resend default email provider |
+| **full**        | Everything enabled (all 13 optional features)                                                               |
 
 ---
 
@@ -63,6 +63,7 @@ All presets include the core stack. These features can be toggled on or off:
 | API Versioning         | URL path versioning with RFC 8594 deprecation/sunset headers      |
 | Idempotency Middleware | Redis-backed idempotency guard for safe request retries           |
 | Circuit Breaker        | Resilience pattern for external service calls (opossum)           |
+| Resend Email Provider  | Sets `EMAIL_PROVIDER=resend` in generated `.env.example`          |
 | CSRF Protection        | Double-submit cookie CSRF via csrf-csrf                           |
 | Audit Logger           | Structured audit logging with daily rotation                      |
 | k6 Load Tests          | Pre-built smoke, load, and rate-limit test scripts                |

@@ -95,6 +95,13 @@ export const FEATURES: FeatureDefinition[] = [
     dependencies: {},
   },
   {
+    name: "resend",
+    label: "Resend Email Provider",
+    description: "Enable Resend as the default email provider in .env.example",
+    includePaths: [],
+    dependencies: {},
+  },
+  {
     name: "audit",
     label: "Audit Logger",
     description:

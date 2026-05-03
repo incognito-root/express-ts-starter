@@ -7,6 +7,7 @@ export type FeatureName =
   | "versioning"
   | "idempotency"
   | "circuitBreaker"
+  | "resend"
   | "csrf"
   | "audit"
   | "k6"

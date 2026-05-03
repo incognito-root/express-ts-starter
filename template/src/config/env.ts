@@ -43,14 +43,16 @@ const envSchema = z.object({
   REDIS_PASSWORD: z.string().optional(),
 
   // Email
-  EMAIL_HOST: z.string(),
-  EMAIL_PORT: z.coerce.number(),
+  EMAIL_PROVIDER: z.enum(["smtp", "resend"]).default("smtp"),
+  EMAIL_HOST: z.string().optional(),
+  EMAIL_PORT: z.coerce.number().optional(),
   EMAIL_SECURE: z
     .string()
     .transform((val) => val === "true")
     .default("false"),
-  EMAIL_USER: z.string(),
-  EMAIL_PASSWORD: z.string(),
+  EMAIL_USER: z.string().optional(),
+  EMAIL_PASSWORD: z.string().optional(),
+  RESEND_API_KEY: z.string().optional(),
   EMAIL_FROM: z.string().email(),
 
   // Rate Limiting
@@ -78,6 +80,45 @@ const envSchema = z.object({
   CLOUDINARY_API_KEY: z.string().optional(),
   CLOUDINARY_API_SECRET: z.string().optional(),
   // @end:uploads
+}).superRefine((env, ctx) => {
+  if (env.EMAIL_PROVIDER === "smtp") {
+    if (!env.EMAIL_HOST) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["EMAIL_HOST"],
+        message: "EMAIL_HOST is required when EMAIL_PROVIDER=smtp",
+      });
+    }
+    if (typeof env.EMAIL_PORT !== "number") {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["EMAIL_PORT"],
+        message: "EMAIL_PORT is required when EMAIL_PROVIDER=smtp",
+      });
+    }
+    if (!env.EMAIL_USER) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["EMAIL_USER"],
+        message: "EMAIL_USER is required when EMAIL_PROVIDER=smtp",
+      });
+    }
+    if (!env.EMAIL_PASSWORD) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["EMAIL_PASSWORD"],
+        message: "EMAIL_PASSWORD is required when EMAIL_PROVIDER=smtp",
+      });
+    }
+  }
+
+  if (env.EMAIL_PROVIDER === "resend" && !env.RESEND_API_KEY) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["RESEND_API_KEY"],
+      message: "RESEND_API_KEY is required when EMAIL_PROVIDER=resend",
+    });
+  }
 });
 
 export type Env = z.infer<typeof envSchema>;

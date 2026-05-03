@@ -38,7 +38,7 @@ All repository operations throw `InternalServerError` (via Prisma's connection e
 
 ---
 
-## Email Provider (SMTP) Unavailable
+## Email Provider (SMTP or Resend) Unavailable
 
 BullMQ retries each email job up to 3 times with exponential backoff (base 2 s). If all retries fail, the job moves to the `failed` queue in Redis (visible via BullMQ dashboard or `bull-board`). No emails are silently lost as long as Redis is available.
 

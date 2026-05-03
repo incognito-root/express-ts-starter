@@ -15,7 +15,8 @@
     "dev": "tsup src/index.ts --format esm --watch",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src --ext .ts",
-    "test": "vitest run"
+    "test": "vitest run",
+    "template:test": "node scripts/template-test.mjs"
   },
   "keywords": [
     "express",

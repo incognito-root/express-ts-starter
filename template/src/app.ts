@@ -16,7 +16,7 @@ import { closeQueues } from "./queues/emailQueue";
 import { otelShutdown } from "./tracing";
 // @end:otel
 import { EmailService } from "./utils/emails/emailService";
-import { NodemailerProvider } from "./utils/emails/nodemailerProvider";
+import { createEmailProvider } from "./utils/emails/emailProviderFactory";
 import logger from "./utils/logger";
 // eslint-disable-next-line no-restricted-imports -- app.ts uses prisma directly for graceful shutdown only
 import prisma from "./utils/prismaClient";
@@ -120,7 +120,7 @@ process.on("SIGTERM", () => gracefulShutdown("SIGTERM"));
 
 function initializeEmailService() {
   try {
-    const emailProvider = new NodemailerProvider();
+    const emailProvider = createEmailProvider();
     const emailService = EmailService.getInstance(emailProvider);
     app.set("emailService", emailService);
     logger.info("Email service initialized");

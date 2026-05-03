@@ -9,8 +9,8 @@ import {
   GenericEmailJob,
   VerificationEmailJob,
 } from "../types";
+import { createEmailProvider } from "../utils/emails/emailProviderFactory";
 import { EmailService } from "../utils/emails/emailService";
-import { NodemailerProvider } from "../utils/emails/nodemailerProvider";
 import logger from "../utils/logger";
 
 const env = getEnv();
@@ -51,7 +51,7 @@ export const emailWorker = new Worker<
     });
 
     try {
-      const emailProvider = new NodemailerProvider();
+      const emailProvider = createEmailProvider();
       const emailService = EmailService.getInstance(emailProvider);
 
       switch (job.name) {

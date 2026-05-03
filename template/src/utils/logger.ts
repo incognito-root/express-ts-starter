@@ -33,14 +33,15 @@ function getTraceId(): string | undefined {
 const logFormat: Format = printf((info: TransformableInfo) => {
   const { level, message, timestamp: ts, stack } = info;
   const requestId = getRequestId();
-  // @feature:otel
-  const traceId = getTraceId();
   const reqPrefix = requestId ? ` [${requestId}]` : "";
-  const tracePrefix = traceId ? ` trace=${traceId}` : "";
-  return `${String(ts)} ${level}${reqPrefix}${tracePrefix}: ${String(stack || message)}`;
+  // @feature:otel
+  {
+    const traceId = getTraceId();
+    const tracePrefix = traceId ? ` trace=${traceId}` : "";
+    return `${String(ts)} ${level}${reqPrefix}${tracePrefix}: ${String(stack || message)}`;
+  }
   // @end:otel
   // @feature:!otel
-  const reqPrefix = requestId ? ` [${requestId}]` : "";
   return `${String(ts)} ${level}${reqPrefix}: ${String(stack || message)}`;
   // @end:!otel
 });

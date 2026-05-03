@@ -50,7 +50,17 @@ async function checkRedis(): Promise<ServiceHealth> {
 function checkEmail(): ServiceHealth {
   try {
     const env = getEnv();
-    if (env.EMAIL_HOST && env.EMAIL_USER) {
+    if (env.EMAIL_PROVIDER === "resend" && env.RESEND_API_KEY) {
+      return { status: "up" };
+    }
+
+    if (
+      env.EMAIL_PROVIDER === "smtp" &&
+      env.EMAIL_HOST &&
+      typeof env.EMAIL_PORT === "number" &&
+      env.EMAIL_USER &&
+      env.EMAIL_PASSWORD
+    ) {
       return { status: "up" };
     }
     return {
@@ -107,56 +117,63 @@ export const healthCheck = async (
   }
 
   try {
+    let allServicesHealthy: boolean;
+    let health: HealthStatus;
+
     // @feature:bullmq
-    const [database, redis, email, queue] = await Promise.all([
-      checkDatabase(),
-      checkRedis(),
-      checkEmail(),
-      checkQueue(),
-    ]);
+    {
+      const [database, redis, email, queue] = await Promise.all([
+        checkDatabase(),
+        checkRedis(),
+        checkEmail(),
+        checkQueue(),
+      ]);
 
-    const allServicesHealthy =
-      database.status === "up" &&
-      redis.status === "up" &&
-      email.status === "up" &&
-      queue.status === "up";
+      allServicesHealthy =
+        database.status === "up" &&
+        redis.status === "up" &&
+        email.status === "up" &&
+        queue.status === "up";
 
-    const health: HealthStatus = {
-      status: allServicesHealthy ? "healthy" : "unhealthy",
-      uptime: process.uptime(),
-      timestamp: new Date().toISOString(),
-      services: {
-        database,
-        redis,
-        email,
-        queue,
-      },
-      version: env.APP_VERSION,
-    };
+      health = {
+        status: allServicesHealthy ? "healthy" : "unhealthy",
+        uptime: process.uptime(),
+        timestamp: new Date().toISOString(),
+        services: {
+          database,
+          redis,
+          email,
+          queue,
+        },
+        version: env.APP_VERSION,
+      };
+    }
     // @end:bullmq
     // @feature:!bullmq
-    const [database, redis, email] = await Promise.all([
-      checkDatabase(),
-      checkRedis(),
-      checkEmail(),
-    ]);
+    {
+      const [database, redis, email] = await Promise.all([
+        checkDatabase(),
+        checkRedis(),
+        checkEmail(),
+      ]);
 
-    const allServicesHealthy =
-      database.status === "up" &&
-      redis.status === "up" &&
-      email.status === "up";
+      allServicesHealthy =
+        database.status === "up" &&
+        redis.status === "up" &&
+        email.status === "up";
 
-    const health: HealthStatus = {
-      status: allServicesHealthy ? "healthy" : "unhealthy",
-      uptime: process.uptime(),
-      timestamp: new Date().toISOString(),
-      services: {
-        database,
-        redis,
-        email,
-      },
-      version: env.APP_VERSION,
-    };
+      health = {
+        status: allServicesHealthy ? "healthy" : "unhealthy",
+        uptime: process.uptime(),
+        timestamp: new Date().toISOString(),
+        services: {
+          database,
+          redis,
+          email,
+        },
+        version: env.APP_VERSION,
+      };
+    }
     // @end:!bullmq
 
     const statusCode = allServicesHealthy ? 200 : 503;

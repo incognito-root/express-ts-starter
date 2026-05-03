@@ -38,7 +38,7 @@ class EmailService {
   }) {
     const htmlContent = getEmailTemplate("emailVerificationEmail", {
       name: user.name,
-      link: user.verificationLink,
+      verificationLink: user.verificationLink,
     });
 
     await this.sendEmail({

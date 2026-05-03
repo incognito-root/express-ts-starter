@@ -1,75 +1,65 @@
-import nodemailer, { Transporter } from "nodemailer";
+import { Resend } from "resend";
 
 import { getEnv } from "../../config/env";
 import { InternalServerError } from "../../errors/InternalServerError";
 import { EmailOptions, EmailProvider } from "../../types";
 import logger from "../logger";
 
-interface MailSendResult {
-  messageId?: string;
-  accepted?: string[];
-  rejected?: string[];
-}
-
-export class NodemailerProvider implements EmailProvider {
-  private transporter: Transporter;
+export class ResendProvider implements EmailProvider {
+  private readonly client: Resend;
 
   constructor() {
     const env = getEnv();
-    const host = env.EMAIL_HOST;
-    const port = env.EMAIL_PORT;
-    const secure = env.EMAIL_SECURE;
-    const user = env.EMAIL_USER;
-    const pass = env.EMAIL_PASSWORD;
+    const apiKey = env.RESEND_API_KEY;
 
-    if (!host || typeof port !== "number" || !user || !pass) {
+    if (!apiKey) {
       throw new InternalServerError(
-        "SMTP configuration is incomplete. Set EMAIL_HOST, EMAIL_PORT, EMAIL_USER, and EMAIL_PASSWORD."
+        "RESEND_API_KEY is required when EMAIL_PROVIDER is set to resend."
       );
     }
 
-    logger.debug("Initializing email transporter", {
-      host,
-      port,
-      secure,
-      user: user ? `${user.substring(0, 4)}...` : "undefined",
-    });
-
-    this.transporter = nodemailer.createTransport({
-      host,
-      port,
-      secure,
-      auth: {
-        user,
-        pass,
-      },
-    });
+    this.client = new Resend(apiKey);
   }
 
   async sendMail(options: EmailOptions): Promise<void> {
     try {
       logger.debug("Attempting to send email", {
+        provider: "resend",
         to: options.to,
         from: options.from,
         subject: options.subject,
       });
 
-      const info = (await this.transporter.sendMail({
+      const { data, error } = await this.client.emails.send({
         from: options.from,
         to: options.to,
         subject: options.subject,
         text: options.text,
         html: options.html,
-        attachments: options.attachments,
-      })) as MailSendResult;
+        attachments: options.attachments?.map((attachment) => ({
+          filename: attachment.filename,
+          content:
+            typeof attachment.content === "string"
+              ? attachment.content
+              : attachment.content.toString(attachment.encoding ?? "base64"),
+        })),
+      });
+
+      if (error) {
+        throw new InternalServerError("Resend API returned an error.", {
+          cause: new Error(error.message),
+        });
+      }
 
       logger.info("Email sent successfully", {
+        provider: "resend",
         to: options.to,
         subject: options.subject,
-        messageId: info.messageId,
+        messageId: data?.id,
       });
     } catch (error) {
       logger.error("Failed to send email", {
+        provider: "resend",
         to: options.to,
         subject: options.subject,
         error: error instanceof Error ? error.message : error,
